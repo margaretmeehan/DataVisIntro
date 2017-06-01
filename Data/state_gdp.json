@@ -1,0 +1,257 @@
+[
+ {
+   "FIELD1": "1",
+   "FIELD2": "Alabama",
+   "FIELD3": 199656
+ },
+ {
+   "FIELD1": "2",
+   "FIELD2": "Alaska",
+   "FIELD3": 52747
+ },
+ {
+   "FIELD1": "4",
+   "FIELD2": "Arizona",
+   "FIELD3": 290903
+ },
+ {
+   "FIELD1": "5",
+   "FIELD2": "Arkansas",
+   "FIELD3": 118907
+ },
+ {
+   "FIELD1": "6",
+   "FIELD2": "California",
+   "FIELD3": 2481348
+ },
+ {
+   "FIELD1": "8",
+   "FIELD2": "Colorado",
+   "FIELD3": 313748
+ },
+ {
+   "FIELD1": "9",
+   "FIELD2": "Connecticut",
+   "FIELD3": 252930
+ },
+ {
+   "FIELD1": "10",
+   "FIELD2": "Delaware",
+   "FIELD3": 68724
+ },
+ {
+   "FIELD1": "11",
+   "FIELD2": "District of Columbia",
+   "FIELD3": 122146
+ },
+ {
+   "FIELD1": "12",
+   "FIELD2": "Florida",
+   "FIELD3": 888087
+ },
+ {
+   "FIELD1": "13",
+   "FIELD2": "Georgia",
+   "FIELD3": 497944
+ },
+ {
+   "FIELD1": "15",
+   "FIELD2": "Hawaii",
+   "FIELD3": 80376
+ },
+ {
+   "FIELD1": "16",
+   "FIELD2": "Idaho",
+   "FIELD3": 65549
+ },
+ {
+   "FIELD1": "17",
+   "FIELD2": "Illinois",
+   "FIELD3": 776882
+ },
+ {
+   "FIELD1": "18",
+   "FIELD2": "Indiana",
+   "FIELD3": 336053
+ },
+ {
+   "FIELD1": "19",
+   "FIELD2": "Iowa",
+   "FIELD3": 174030
+ },
+ {
+   "FIELD1": "20",
+   "FIELD2": "Kansas",
+   "FIELD3": 149641
+ },
+ {
+   "FIELD1": "21",
+   "FIELD2": "Kentucky",
+   "FIELD3": 193274
+ },
+ {
+   "FIELD1": "22",
+   "FIELD2": "Louisiana",
+   "FIELD3": 239305
+ },
+ {
+   "FIELD1": "23",
+   "FIELD2": "Maine",
+   "FIELD3": 57297
+ },
+ {
+   "FIELD1": "24",
+   "FIELD2": "Maryland",
+   "FIELD3": 365356
+ },
+ {
+   "FIELD1": "25",
+   "FIELD2": "Massachusetts",
+   "FIELD3": 484943
+ },
+ {
+   "FIELD1": "26",
+   "FIELD2": "Michigan",
+   "FIELD3": 468334
+ },
+ {
+   "FIELD1": "27",
+   "FIELD2": "Minnesota",
+   "FIELD3": 328340
+ },
+ {
+   "FIELD1": "28",
+   "FIELD2": "Mississippi",
+   "FIELD3": 105819
+ },
+ {
+   "FIELD1": "29",
+   "FIELD2": "Missouri",
+   "FIELD3": 294491
+ },
+ {
+   "FIELD1": "30",
+   "FIELD2": "Montana",
+   "FIELD3": 45237
+ },
+ {
+   "FIELD1": "31",
+   "FIELD2": "Nebraska",
+   "FIELD3": 113282
+ },
+ {
+   "FIELD1": "32",
+   "FIELD2": "Nevada",
+   "FIELD3": 139724
+ },
+ {
+   "FIELD1": "33",
+   "FIELD2": "New Hampshire",
+   "FIELD3": 73867
+ },
+ {
+   "FIELD1": "34",
+   "FIELD2": "New Jersey",
+   "FIELD3": 567738
+ },
+ {
+   "FIELD1": "35",
+   "FIELD2": "New Mexico",
+   "FIELD3": 93339
+ },
+ {
+   "FIELD1": "36",
+   "FIELD2": "New York",
+   "FIELD3": 1433531
+ },
+ {
+   "FIELD1": "37",
+   "FIELD2": "North Carolina",
+   "FIELD3": 495402
+ },
+ {
+   "FIELD1": "38",
+   "FIELD2": "North Dakota",
+   "FIELD3": 55860
+ },
+ {
+   "FIELD1": "39",
+   "FIELD2": "Ohio",
+   "FIELD3": 610928
+ },
+ {
+   "FIELD1": "40",
+   "FIELD2": "Oklahoma",
+   "FIELD3": 185981
+ },
+ {
+   "FIELD1": "41",
+   "FIELD2": "Oregon",
+   "FIELD3": 217629
+ },
+ {
+   "FIELD1": "42",
+   "FIELD2": "Pennsylvania",
+   "FIELD3": 709762
+ },
+ {
+   "FIELD1": "44",
+   "FIELD2": "Rhode Island",
+   "FIELD3": 56052
+ },
+ {
+   "FIELD1": "45",
+   "FIELD2": "South Carolina",
+   "FIELD3": 201005
+ },
+ {
+   "FIELD1": "46",
+   "FIELD2": "South Dakota",
+   "FIELD3": 47244
+ },
+ {
+   "FIELD1": "47",
+   "FIELD2": "Tennessee",
+   "FIELD3": 315857
+ },
+ {
+   "FIELD1": "48",
+   "FIELD2": "Texas",
+   "FIELD3": 1630082
+ },
+ {
+   "FIELD1": "49",
+   "FIELD2": "Utah",
+   "FIELD3": 147503
+ },
+ {
+   "FIELD1": "50",
+   "FIELD2": "Vermont",
+   "FIELD3": 30038
+ },
+ {
+   "FIELD1": "51",
+   "FIELD2": "Virginia",
+   "FIELD3": 481084
+ },
+ {
+   "FIELD1": "53",
+   "FIELD2": "Washington",
+   "FIELD3": 445413
+ },
+ {
+   "FIELD1": "54",
+   "FIELD2": "West Virginia",
+   "FIELD3": 74321
+ },
+ {
+   "FIELD1": "55",
+   "FIELD2": "Wisconsin",
+   "FIELD3": 302076
+ },
+ {
+   "FIELD1": "56",
+   "FIELD2": "Wyoming",
+   "FIELD3": 39864
+ }
+]

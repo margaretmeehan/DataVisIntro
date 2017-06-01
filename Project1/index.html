@@ -1,0 +1,403 @@
+<html>
+<head>
+  <title>Project 1</title>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="http://d3js.org/topojson.v2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.13.0/d3-legend.js"></script>
+  <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+  <link rel="stylesheet" href="main.css">
+  <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Oswald|Roboto+Condensed" rel="stylesheet">
+</head>
+<body>
+  <div id="margins" width="1000">
+
+    <h1 id = "header"> Dissecting State Economy </h1>
+    <div id="p1">
+      <div id="inner">
+      <h1>GDP Contribution by State</h1>
+      <h3>Interested in what affected each state's contribution to the national GDP, we looked at the most recent government data from 2015. We found that Vermont has the lowest overall GDP and California the highest. This statistic is skewed by population and masks important information about each state. We added in the doughnut chart to show GDP per capita by region. </h3>
+      </div>
+    </div>
+
+    <div id="p2">
+      <div id="inner">
+<!--       We resolved to look at percentage of population statistics by state in order to rid the population bias.
+ -->  <h1>Percentage of Population Below Poverty Line by State</h1>
+      <h3>In seeking to determine why some states are more monetarily successful than others, we plotted the percentage of citizens per state that live under the poverty line in 2015. We expected the lowest GDP contributors to have the highest povery rates. Yet, while Vermont is the lowest overall contributor, it has a low poverty rate. Comparing this data, we show that overall GDP is misleading and that the GDP per capita is a better measure of a state's sucess -- the Southeast actually has the lowest GDP per capita which aligns with the poverty map's visualization. </h3>
+      </div>
+    </div>
+
+    <div id="p3">
+      <div id="inner">
+        <h1>Looking closer at the Southeast</h1>
+        <h2>Poverty Percentage by County</h2>
+        <h3>Interested in why the Southeast's poverty and per capita GDP seems to conflict with its overall GDP contribution, we closely examined this region by county. </h3>
+      </div>
+
+    </div>
+
+    <div id="p4">
+      <div id="inner">
+        <h1>Looking at Minimum Wages</h1>
+        <h3>Strikingly, the southern states have some of the lowest minimum wage laws in the country. 5 of which, don't even have minimum wage laws: Alabama, Mississippi, Louisiana, Tennessee, and South Carolina. These low minimum wages could contribute to why the poverty rate is so high in the South, despite rather decent state-wide GDP contribution.</h3>
+      </div>
+
+    </div>
+
+  </div>
+  <script>
+
+  d3.select("#p1").append("svg").attr("width", 1400).attr("height", 800).attr("id", "svgStatesGDP");
+
+  d3.select("#p2").append("svg").attr("width", 1200).attr("height", 800).attr("id", "svgStatesPoverty");
+
+  d3.select("#p3").append("svg").attr("width", 1200).attr("height", 800).attr("id", "svgCounties");
+
+  d3.select("#p4").append("svg").attr("width", 1200).attr("height", 800).attr("id", "svgWages");
+
+  var svg_counties = d3.select("#svgCounties");
+
+  var svg_states_gdp = d3.select("#svgStatesGDP");
+
+  var svg_states_poverty = d3.select("#svgStatesPoverty");
+
+  var svg_states_wages = d3.select("#svgWages");
+
+  var projection = d3.geoAlbersUsa().scale(75);
+  var pathGenerator = d3.geoPath().projection(projection);
+
+  var width = 960,
+    height = 700,
+    radius = (Math.min(width, height) / 2) - 10;
+
+  var colorStates = d3.scaleLinear().domain([30038, 2481348])
+    .interpolate(d3.interpolateHcl)
+    .range([d3.rgb('#1F313F'), d3.rgb("#EEEF63")]);
+
+  var colorPoverty = d3.scaleLinear().domain([3,40])
+      .interpolate(d3.interpolateHcl)
+      .range([d3.rgb('#1F212E'), d3.rgb("#FC9DD0")]);
+
+  var colorStatesPoverty = d3.scaleLinear().domain([6.6,21.8])
+      .interpolate(d3.interpolateHcl)
+      .range([d3.rgb("#1F212E"), d3.rgb('#FC9DD0')]);
+
+  var colorCapita = d3.scaleLinear().domain([41351,59071])
+    .interpolate(d3.interpolateHcl)
+    .range([d3.rgb('#1F313F'), d3.rgb("#EEEF63")]);
+
+  var colorwages = d3.scaleLinear().domain([0,9.47])
+    .interpolate(d3.interpolateHcl)
+    .range([d3.rgb('#463C54'), d3.rgb("#429CB3")]);
+
+  var counties, states;
+  var cData;
+  var sData;
+  var spData;
+  var povData;
+  var cuData;
+  var wData;
+
+  d3.queue()
+  .defer(d3.json, "../Data/us.json")
+  .defer(d3.json, "../Data/state_gdp.json")
+  .defer(d3.json, "../Data/poverty_percentage_fips.json")
+  .defer(d3.json, "../Data/povertystate.json")
+  .defer(d3.json, "../Data/unemployed.json")
+  .defer(d3.json, "../Data/wages.json")
+
+  .await(function (error, rawMap, rawStateData, rawCountyData, rawStatePovertyData, rawDataUnemployed, rawWageData) {
+
+  //ARRAY OF SOUTHEAST STATE FIPS
+  Southeast = [54, 51, 21, 37, 45, 13, 1, 28, 5, 22, 12, 47];
+
+  //CREATE COUNTY ARRAY
+  var southcounties = new Array();
+
+  //LOOP THROUGH RAWMAP COUNTIES AND PUSH MATCHING COUNTIES TO ARRAY
+  rawMap.objects.counties.geometries.forEach( function (county) {
+    if(Southeast.includes(Math.floor(county.id/1000))){
+      southcounties.push(county);
+    }
+  });
+
+  //CREATE NEW OBJECT TO MIRROR RAWMAP.OBJECTS.COUNTIES
+  var newCounties = {};
+  newCounties['type'] = "GeometryCollection";
+  newCounties['geometries'] =  southcounties;
+
+  counties = topojson.feature(rawMap, newCounties);
+
+  states = topojson.feature(rawMap, rawMap.objects.states);
+
+  cData = d3.map(rawCountyData, function (d) {
+    x = d.FIPS;
+    y = Math.floor(x/1000);
+
+    if(Southeast.includes(y)){
+      return d.FIPS;
+    }
+  });
+
+  sData = d3.map(rawStateData, function (d) {
+    return d.FIELD1;
+  });
+
+  spData = d3.map(rawStatePovertyData, function (d) {
+    return d.FIPS;
+  });
+
+  wData = d3.map(rawWageData, function (d){
+    return d.FIPS;
+  })
+
+  showMapCountyPoverty();
+
+  showMapStateGDP();
+
+  showMapStatePoverty();
+
+  showMapWage();
+
+  });
+
+
+function showMapStateGDP(stateScale) {
+
+  projection.fitExtent([[0,0], [svg_states_gdp.attr("width") - 700, svg_states_gdp.attr("height")]], states);
+  pathGenerator = d3.geoPath().projection(projection);
+
+  var paths = svg_states_gdp.selectAll("path.country").data(states.features);
+  paths.enter().append("path").attr("class", "country")
+  .merge(paths)
+  .style("fill", function(states) {
+    var stateData = sData.get(states.id);
+    if (stateData) {
+      return colorStates(stateData.FIELD3);
+    }
+  })
+  .attr("d", function (states) {
+    return pathGenerator(states);
+  })
+  .style("stroke", "white")
+  .style("stroke-width", "0.2")
+  .attr("transform", "translate(" + 10 + "," + -70 + ")");
+
+  paths.enter().append("g")
+    .attr("class", "legendLinear")
+      .attr("transform", "translate(" + 5 + "," + 30 + ")");
+
+  var legendLinear = d3.legendColor()
+    .title("Contribution to GDP in US Dollars")
+
+    .orient("horizontal")
+    .scale(colorStates)
+    .labels(["30038", "642865", "1255693", "1868520", "2481348"])
+    .shapeWidth(80)
+    .shapeHeight(10)
+    .shapePadding(6);
+
+  svg_states_gdp.select(".legendLinear")
+    .call(legendLinear)
+    .style("fill", "white")
+    .style("font-size", "20px")
+    .style("font-family", "serif");
+
+
+  paths.enter().append("g")
+    .attr("class", "legend")
+      .attr("transform", "translate(" + 1100 + "," + 450 + ")");
+
+  var legend = d3.legendColor()
+    .title("GDP Per Capita by Region")
+    .scale(colorCapita)
+    .cells([41351, 47093, 47604, 49153, 50519, 55429, 58074, 59071])
+    .labels(["Southeast: 41351", "Rocky Mountain: 47093", "Great Lakes: 47604", "Mideast: 49153", "Southwest: 50519", "Far West: 55429", "New England: 58074", "Mideast: 59071"])
+    .shapeWidth(20)
+    .shapeHeight(20)
+    .shapePadding(6);
+
+  svg_states_gdp.select(".legend")
+    .call(legend)
+    .style("fill", "white")
+    .style("font-size", "20px")
+    .style("font-family", "serif");
+
+}
+
+function showMapStatePoverty() {
+
+  projection.fitExtent([[0,0], [svg_states_poverty.attr("width") - 200, svg_states_poverty.attr("height")]], states);
+  pathGenerator = d3.geoPath().projection(projection);
+
+  var paths = svg_states_poverty.selectAll("path.country").data(states.features);
+  paths.enter().append("path").attr("class", "country")
+  .merge(paths)
+  .style("fill", function(states) {
+    var stateData = spData.get(states.id);
+    if (stateData) {
+      return colorStatesPoverty(stateData.Rate);
+    }
+  })
+  .attr("d", function (states) {
+    return pathGenerator(states);
+  })
+  .style("stroke", "white")
+  .style("stroke-width", "0.2");
+
+  paths.enter().append("g")
+    .attr("class", "legendLinear")
+      .attr("transform", "translate(" + 800 + "," + 50 + ")");
+
+  var legendLinear = d3.legendColor()
+    .orient('horizontal')
+    .title("Percentage Below the Poverty Line")
+    .scale(colorStatesPoverty)
+    .shapeWidth(50)
+    .shapeHeight(20)
+    .shapePadding(3);
+
+  svg_states_poverty.select(".legendLinear")
+    .call(legendLinear)
+    .style("fill", "white")
+    .style("font-size", "20px")
+    .style("font-family", "serif")
+;
+
+}
+
+function showMapCountyPoverty() {
+  // Create or modify paths for each country
+
+  projection.fitExtent([[0,0], [800, 600]], counties);
+  pathGenerator = d3.geoPath().projection(projection);
+
+  var paths = svg_counties.selectAll("path.country").data(counties.features);
+  paths.enter().append("path").attr("class", "country")
+  .on("click", function (d) { console.log(d.id); })
+  .merge(paths)
+  .style("fill", function(counties) {
+    var countyData = cData.get(counties.id);
+    if (countyData) {
+      return colorPoverty(countyData.Percent);
+    }
+
+  })
+  .attr("d", function (counties) {
+    return pathGenerator(counties);
+  })
+  .style("stroke", "#ebedee")
+  .style("stroke-width", "0.2")
+  .attr("transform", "translate(" + -80 + "," + 50 + ")");
+
+  paths.enter().append("g")
+    .attr("class", "legendLinear")
+      .attr("transform", "translate(" + 10 + "," + 50 + ")");
+
+  var legendLinear = d3.legendColor()
+    .orient('horizontal')
+    .title("Percentage Below the Poverty Line")
+    .scale(colorPoverty)
+    .shapeWidth(50)
+    .shapeHeight(20)
+    .shapePadding(3);
+
+  svg_counties.select(".legendLinear")
+    .call(legendLinear)
+    .style("fill", "white")
+    .style("font-size", "20px")
+    .style("font-family", "serif");
+
+}
+
+//SUNBURST
+
+var formatNumber = d3.format(",d");
+
+var x = d3.scaleLinear()
+    .range([0, 2*Math.PI]);
+
+var y = d3.scaleSqrt()
+    .range([0, 100]);
+
+var partition = d3.partition();
+
+var arc = d3.arc()
+    .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+    .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+    .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+    .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
+
+d3.json("../Data/GDP_Capita.json", function(error, root) {
+  if (error) throw error;
+
+  root = d3.hierarchy(root);
+
+  root.sum(function(d) { return d.GDP; });
+  svg_states_gdp.selectAll("path")
+      .data(partition(root).descendants())
+    .enter().append("path")
+      .attr("d", arc)
+      .style("fill", function(d) {
+        if(d.height == 1) return "#2c3e50";
+        if(d.height == 0) return colorCapita(d.value);
+        return "white"; })
+      .style("stroke", "black")
+      .style("stroke-width", ".3")
+      .attr("transform", "translate(" + 950 + "," + 550 + ")");
+
+});
+
+function showMapWage() {
+  // Create or modify paths for each country
+
+  projection.fitExtent([[0,0], [svg_states_gdp.attr("width")-200, svg_states_gdp.attr("height")]], states);
+  pathGenerator = d3.geoPath().projection(projection);
+
+  var paths = svg_states_wages.selectAll("path.country").data(states.features);
+  paths.enter().append("path").attr("class", "country")
+  .merge(paths)
+  .style("fill", function(states) {
+    var stateData = wData.get(states.id);
+    if (stateData) {
+      console.log(stateData.WAGERATE);
+      return colorwages(stateData.WAGERATE);
+    }
+  })
+  .attr("d", function (states) {
+    return pathGenerator(states);
+  })
+  .style("stroke", "white")
+  .style("stroke-width", "0.2");
+
+  paths.enter().append("g")
+    .attr("class", "legendLinear")
+      .attr("transform", "translate(" + 800 + "," + 50 + ")");
+
+  var legendLinear = d3.legendColor()
+    .orient('horizontal')
+    .title("Minimum Wages per State (dollars)")
+    .scale(colorwages)
+    .shapeWidth(50)
+    .shapeHeight(20)
+    .shapePadding(3);
+
+  svg_states_wages.select(".legendLinear")
+    .call(legendLinear)
+    .style("fill", "white")
+    .style("font-size", "20px")
+    .style("font-family", "serif");
+
+}
+
+
+</script>
+
+</div>
+
+<h4 style="font-style:italic">This analysis is brought to you by Margaret Meehan, Michas Szacillo and Robert Yang.</h4>
+
+</body>
+</html>

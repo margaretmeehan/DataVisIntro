@@ -1,0 +1,37 @@
+{
+  "name": "Region",
+  "children": [
+    {
+    "name": "New England",
+    "GDP": 58074
+    },
+    {
+    "name": "Mideast",
+    "GDP": 59071
+    },
+    {
+    "name": "Great Lakes",
+    "GDP": 47604
+    },
+    {
+    "name": "Plains",
+    "GDP": 49153
+    },
+    {
+    "name": "Southeast",
+    "GDP": 41351
+    },
+    {
+    "name": "Southwest",
+    "GDP": 50519
+    },
+    {
+    "name": "Rocky Mountain",
+    "GDP": 47093
+    },
+    {
+    "name": "Far West",
+    "GDP": 55429
+    }
+  ]
+}
